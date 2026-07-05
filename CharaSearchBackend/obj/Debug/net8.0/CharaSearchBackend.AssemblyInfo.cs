@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CharaSearchBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ae1b5b3fb9d048a78e95a77df2077e5e605535c")]
 [assembly: System.Reflection.AssemblyProductAttribute("CharaSearchBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CharaSearchBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

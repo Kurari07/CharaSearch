@@ -1,56 +1,91 @@
-using System.Net.Http.Json;
 using System.Text.Json;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
+
 var app = builder.Build();
 app.UseCors();
 
 var httpClient = new HttpClient();
-var apiKey = "YourAPIKey";
+
+var apiKey = "YourAPIKey"; 
 
 app.MapPost("/api/search", async (SearchRequest request) =>
 {
     try
     {
-        var base64Part = request.ImageBase64.Contains(",") ? request.ImageBase64.Split(',')[1] : request.ImageBase64;
-        var imageBytes = Convert.FromBase64String(base64Part);
+        // 1. Base64文字列をバイト配列(画像データ)に変換
+        var base64Data = request.ImageBase64.Contains(",") ? request.ImageBase64.Split(',')[1] : request.ImageBase64;
+        var imageBytes = Convert.FromBase64String(base64Data);
 
+        // 2. SauceNAO APIに送信するフォームデータを作成
         using var content = new MultipartFormDataContent();
-        content.Add(new ByteArrayContent(imageBytes), "file", "image.jpg");
         content.Add(new StringContent(apiKey), "api_key");
-        content.Add(new StringContent("2"), "output_type");
+        content.Add(new StringContent("2"), "output_type"); // 2 = JSON形式を要求
+        
+        var imageContent = new ByteArrayContent(imageBytes);
+        imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
+        content.Add(imageContent, "file", "image.jpg");
 
+        // 3. SauceNAOへリクエスト送信
         var response = await httpClient.PostAsync("https://saucenao.com/search.php", content);
-        var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+        
+        // ★重要: いきなりJSONとして解釈せず、まずは「ただの文字列」として読み取る
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine("\n=== SauceNAOからの応答 ===");
+        Console.WriteLine(responseString);
+        Console.WriteLine("==========================\n");
 
-        // 「results」配列が存在するか確認
-        if (json.TryGetProperty("results", out var results) && results.GetArrayLength() > 0)
+        // 4. 返ってきた文字列がJSONの開始文字 "{" で始まっているかチェック
+        if (!responseString.TrimStart().StartsWith("{"))
         {
-            var topResult = results[0];
-            if (topResult.TryGetProperty("data", out var data))
+            // SauceNAOが "error..." などの文字列を返してきた場合の安全処理
+            return Results.Ok(new SearchResponse { Character = "検索失敗", Title = "APIの制限またはエラー" });
+        }
+
+        // 5. 安全が確認できたらJSONとして解析
+        var doc = JsonDocument.Parse(responseString);
+        var root = doc.RootElement;
+
+        string character = "不明";
+        string title = "不明";
+
+        // 結果が含まれているか階層を安全にチェック
+        if (root.TryGetProperty("results", out var results) && results.GetArrayLength() > 0)
+        {
+            var firstResult = results[0].GetProperty("data");
+            
+            // キャラクター名の取得
+            if (firstResult.TryGetProperty("characters", out var charaProp))
             {
-                // ここで「source」や「characters」を安全に取得
-                string title = data.TryGetProperty("source", out var s) ? s.ToString() : "作品名不明";
-                string chara = data.TryGetProperty("characters", out var c) ? c.ToString() : "キャラ名不明";
-                
-                // もし両方不明なら、他の候補を探すか、最低限の情報を返す
-                return Results.Ok(new SearchResponse { Character = chara, Title = title });
+                character = charaProp.GetString() ?? "不明";
+            }
+            // 作品名の取得（SauceNAOは title または source に入っていることが多い）
+            if (firstResult.TryGetProperty("title", out var titleProp) || 
+                firstResult.TryGetProperty("source", out titleProp))
+            {
+                title = titleProp.GetString() ?? "不明";
             }
         }
-        
-        return Results.Ok(new SearchResponse { Character = "特定できませんでした", Title = "検索結果なし" });
+        else
+        {
+            return Results.Ok(new SearchResponse { Character = "特定できませんでした", Title = "検索結果なし" });
+        }
+
+        return Results.Ok(new SearchResponse { Character = character, Title = title });
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"エラー内容: {ex.Message}");
-        return Results.Ok(new SearchResponse { Character = "検索エラー", Title = "API通信に失敗" });
+        Console.WriteLine($"[システムエラー]: {ex.Message}");
+        return Results.Ok(new SearchResponse { Character = "システムエラー", Title = "エラー" });
     }
 });
 
 app.Run();
 
+// データの受け渡し用クラス
 public class SearchRequest { public string ImageBase64 { get; set; } = ""; }
 public class SearchResponse { public string Character { get; set; } = ""; public string Title { get; set; } = ""; }

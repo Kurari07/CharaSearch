@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "91uGnMT0TtI=",
+  "dgSpecHash": "Mje0lAWiK3k=",
   "success": true,
-  "projectFilePath": "C:\\Personal_Program\\CharaSearchBackend\\CharaSearchBackend.csproj",
+  "projectFilePath": "C:\\Personal_Program\\Chara\\CharaSearchBackend\\CharaSearchBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ASRock\\.nuget\\packages\\azure.ai.openai\\2.1.0\\azure.ai.openai.2.1.0.nupkg.sha512",
     "C:\\Users\\ASRock\\.nuget\\packages\\azure.core\\1.44.1\\azure.core.1.44.1.nupkg.sha512",

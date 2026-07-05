@@ -554,11 +554,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Personal_Program\\CharaSearchBackend\\CharaSearchBackend.csproj",
+      "projectUniqueName": "C:\\Personal_Program\\Chara\\CharaSearchBackend\\CharaSearchBackend.csproj",
       "projectName": "CharaSearchBackend",
-      "projectPath": "C:\\Personal_Program\\CharaSearchBackend\\CharaSearchBackend.csproj",
+      "projectPath": "C:\\Personal_Program\\Chara\\CharaSearchBackend\\CharaSearchBackend.csproj",
       "packagesPath": "C:\\Users\\ASRock\\.nuget\\packages\\",
-      "outputPath": "C:\\Personal_Program\\CharaSearchBackend\\obj\\",
+      "outputPath": "C:\\Personal_Program\\Chara\\CharaSearchBackend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ASRock\\AppData\\Roaming\\NuGet\\NuGet.Config"
