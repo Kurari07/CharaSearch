@@ -1,0 +1,7 @@
+C:\Personal_Program\CharaSearchBackend\obj\Debug\net5.0\CharaSearchBackend.csproj.AssemblyReference.cache
+C:\Personal_Program\CharaSearchBackend\obj\Debug\net5.0\CharaSearchBackend.GeneratedMSBuildEditorConfig.editorconfig
+C:\Personal_Program\CharaSearchBackend\obj\Debug\net5.0\CharaSearchBackend.AssemblyInfoInputs.cache
+C:\Personal_Program\CharaSearchBackend\obj\Debug\net5.0\CharaSearchBackend.AssemblyInfo.cs
+C:\Personal_Program\CharaSearchBackend\obj\Debug\net5.0\CharaSearchBackend.csproj.CoreCompileInputs.cache
+C:\Personal_Program\CharaSearchBackend\obj\Debug\net5.0\CharaSearchBackend.MvcApplicationPartsAssemblyInfo.cs
+C:\Personal_Program\CharaSearchBackend\obj\Debug\net5.0\CharaSearchBackend.MvcApplicationPartsAssemblyInfo.cache
